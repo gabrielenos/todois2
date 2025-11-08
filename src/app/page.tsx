@@ -1,13 +1,21 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth, AuthProvider } from '@/context/AuthContext';
 import { PreferencesProvider } from '@/context/PreferencesContext';
-import MainLayout from '@/components/MainLayout';
 import Login from '@/components/Login';
 import Onboarding from '@/components/Onboarding';
 
 function AppContent() {
+  const router = useRouter();
   const { isAuthenticated, needsOnboarding, completeOnboarding } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated && !needsOnboarding) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, needsOnboarding, router]);
 
   if (!isAuthenticated) {
     return <Login />;
@@ -17,7 +25,7 @@ function AppContent() {
     return <Onboarding onComplete={completeOnboarding} />;
   }
 
-  return <MainLayout />;
+  return null; // Will redirect to /dashboard
 }
 
 export default function Home() {

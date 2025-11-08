@@ -1,23 +1,23 @@
 'use client';
 
+import Link from 'next/link';
 import { usePreferences } from '@/context/PreferencesContext';
 
 interface SidebarProps {
   currentView: string;
-  onViewChange: (view: string) => void;
 }
 
-export default function Sidebar({ currentView, onViewChange }: SidebarProps) {
+export default function Sidebar({ currentView }: SidebarProps) {
   const { t } = usePreferences();
 
   const menuItems = [
-    { id: 'dashboard', label: t('sidebar.dashboard'), icon: '📊' },
-    { id: 'todos', label: t('sidebar.todos'), icon: '✅' },
-    { id: 'contacts', label: t('sidebar.contacts'), icon: '📧' },
-    { id: 'calendar', label: t('sidebar.calendar'), icon: '📅' },
-    { id: 'notes', label: t('sidebar.notes'), icon: '📝' },
-    { id: 'statistics', label: t('sidebar.statistics'), icon: '📈' },
-    { id: 'settings', label: t('sidebar.settings'), icon: '⚙️' },
+    { id: 'dashboard', label: t('sidebar.dashboard'), icon: '📊', href: '/dashboard' },
+    { id: 'todos', label: t('sidebar.todos'), icon: '✅', href: '/todos' },
+    { id: 'contacts', label: t('sidebar.contacts'), icon: '📧', href: '/contacts' },
+    { id: 'calendar', label: t('sidebar.calendar'), icon: '📅', href: '/calendar' },
+    { id: 'notes', label: t('sidebar.notes'), icon: '📝', href: '/notes' },
+    { id: 'statistics', label: t('sidebar.statistics'), icon: '📈', href: '/statistics' },
+    { id: 'settings', label: t('sidebar.settings'), icon: '⚙️', href: '/settings' },
   ];
 
   return (
@@ -35,9 +35,9 @@ export default function Sidebar({ currentView, onViewChange }: SidebarProps) {
       {/* Menu Items */}
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => (
-          <button
+          <Link
             key={item.id}
-            onClick={() => onViewChange(item.id)}
+            href={item.href}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
               currentView === item.id
                 ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105'
@@ -46,7 +46,7 @@ export default function Sidebar({ currentView, onViewChange }: SidebarProps) {
           >
             <span className="text-2xl">{item.icon}</span>
             <span className="font-medium">{item.label}</span>
-          </button>
+          </Link>
         ))}
       </nav>
 
