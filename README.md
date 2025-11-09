@@ -31,53 +31,82 @@ A modern, full-featured todo application built with Next.js and FastAPI. Manage 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
-- Python 3.8+
-- npm or yarn
+- Node.js 18+ ([Download](https://nodejs.org/))
+- Python 3.8+ ([Download](https://www.python.org/downloads/))
+- Git ([Download](https://git-scm.com/downloads))
 
-### Installation
+### ⚡ Quick Start (Recommended)
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/todo-app.git
-cd todo-app
+git clone https://github.com/gabrielenos/todois2.git
+cd todois2
 ```
 
-2. **Install Frontend Dependencies**
+2. **Install Dependencies**
 ```bash
 npm install
-```
-
-3. **Install Backend Dependencies**
-```bash
 cd backend
 pip install -r requirements.txt
+cd ..
 ```
 
-4. **Create Test User (Optional)**
+3. **Create Environment File**
+Create `.env.local` in root folder:
+```
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
+
+4. **Run the App (EASIEST WAY)**
+
+**Windows:**
 ```bash
-cd backend
-python create_test_user.py
+# Double-click this file:
+START-SIMPLE.bat
 ```
 
-### Running the Application
+**Or manually:**
 
 **Terminal 1 - Backend:**
 ```bash
 cd backend
-uvicorn main:app --reload
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
-Backend runs on: http://localhost:8000
 
 **Terminal 2 - Frontend:**
 ```bash
 npm run dev
 ```
-Frontend runs on: http://localhost:3000
 
-### Default Test Account
-- Email: `test@example.com`
-- Password: `test123`
+5. **Open Browser**
+```
+http://localhost:3000
+```
+
+6. **Register New Account**
+- No default account
+- Click "Daftar" to create new account
+- Use your email and password
+
+### 🎯 First Time Setup
+
+**After cloning, just run:**
+```bash
+# 1. Install frontend
+npm install
+
+# 2. Install backend
+cd backend
+pip install -r requirements.txt
+cd ..
+
+# 3. Create .env.local file (copy from above)
+
+# 4. Start app
+START-SIMPLE.bat  (Windows)
+```
+
+**That's it! App will open automatically in browser!**
 
 ## 📁 Project Structure
 
@@ -102,6 +131,12 @@ Frontend runs on: http://localhost:3000
 
 ## 🔧 Available Scripts
 
+### Windows Scripts (Easy to Use)
+- `START-SIMPLE.bat` - Start frontend + backend automatically
+- `START-BACKEND.bat` - Start backend only
+- `RESTART-BACKEND.bat` - Restart backend after code changes
+- `CHECK-BACKEND.bat` - Check if backend is running
+
 ### Frontend
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
@@ -111,6 +146,58 @@ Frontend runs on: http://localhost:3000
 - `python check_users.py` - Check registered users
 - `python create_test_user.py` - Create test user
 - `python backup_db.py` - Backup database
+
+## ❌ Troubleshooting
+
+### Backend Not Running?
+
+**Problem:** Cannot login/register, error "Cannot connect to backend"
+
+**Solution:**
+1. Check if backend is running:
+   ```bash
+   CHECK-BACKEND.bat
+   ```
+
+2. If not running, start it:
+   ```bash
+   START-BACKEND.bat
+   ```
+
+3. Make sure `.env.local` file exists with:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   ```
+
+### Port Already in Use?
+
+**Problem:** Error "Port 8000 already in use"
+
+**Solution:**
+```bash
+# Find and kill the process
+netstat -ano | findstr :8000
+taskkill /PID <process_id> /F
+
+# Then restart backend
+START-BACKEND.bat
+```
+
+### Module Not Found?
+
+**Problem:** Error "ModuleNotFoundError: No module named 'fastapi'"
+
+**Solution:**
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+### Need More Help?
+
+Read detailed troubleshooting guide:
+- `BACKEND-TROUBLESHOOTING.md`
+- `QUICK-START.md`
 
 ## 🎨 Features in Detail
 
