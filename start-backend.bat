@@ -8,9 +8,9 @@ cd backend
 
 echo Checking if database exists...
 if exist todo_app.db (
-    echo Database found. Deleting old database...
-    del todo_app.db
-    echo Old database deleted!
+    echo Database found. Using existing database.
+) else (
+    echo Database not found. Will be created automatically.
 )
 
 echo.
