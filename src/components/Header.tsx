@@ -1,13 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import ProfileModal from './ProfileModal';
 
 export default function Header() {
+  const router = useRouter();
   const { user, logout } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
 
   return (
     <>
@@ -118,7 +125,7 @@ export default function Header() {
                   {/* Logout */}
                   <div className="border-t border-gray-200 dark:border-gray-700">
                     <button
-                      onClick={logout}
+                      onClick={handleLogout}
                       className="w-full px-4 py-3 text-left hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 text-red-600 dark:text-red-400 transition-colors"
                     >
                       <span className="text-xl">🚪</span>

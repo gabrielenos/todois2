@@ -29,12 +29,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Demo users - dalam produksi, ini harus dari backend/database
-const DEMO_USERS = [
-  { username: 'admin', password: 'admin123', name: 'Administrator' },
-  { username: 'user', password: 'user123', name: 'User Demo' },
-];
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
