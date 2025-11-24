@@ -509,7 +509,11 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 
   // Prevent flash of unstyled content
   if (!mounted) {
-    return null;
+    return (
+      <div className="opacity-0">
+        {children}
+      </div>
+    );
   }
 
   return (
@@ -522,7 +526,9 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         t,
       }}
     >
-      {children}
+      <div className={mounted ? 'opacity-100' : 'opacity-0'} style={{ transition: 'opacity 0.1s ease' }}>
+        {children}
+      </div>
     </PreferencesContext.Provider>
   );
 }
@@ -530,7 +536,14 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 export function usePreferences() {
   const context = useContext(PreferencesContext);
   if (context === undefined) {
-    throw new Error('usePreferences must be used within a PreferencesProvider');
+    // Return default values instead of throwing error
+    return {
+      theme: 'light' as Theme,
+      language: 'id' as Language,
+      toggleTheme: () => {},
+      setLanguage: () => {},
+      t: (key: string) => key,
+    };
   }
   return context;
 }

@@ -1,64 +1,43 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import ProfileModal from './ProfileModal';
 
 export default function Header() {
-  const router = useRouter();
   const { user, logout } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    router.push('/');
-  };
-
   return (
     <>
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 sticky top-0 z-40">
-        <div className="flex items-center justify-between">
-          {/* Left side - can add breadcrumbs or title here */}
-          <div className="flex items-center gap-4">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white">
-              📝 Todo App
-            </h2>
+      <header className="header sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-6">
+          {/* Left side - App title */}
+          <div className="logo-section">
+            <span className="logo-icon">📝</span>
+            <span className="app-title">Todo App</span>
           </div>
 
           {/* Right side - User Profile */}
-          <div className="relative">
+          <div className="user-section">
             <button
+              type="button"
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className={`user-button ${isProfileOpen ? 'active' : ''}`}
             >
-              <div className="text-right hidden sm:block">
-                <p className="text-sm font-medium text-gray-800 dark:text-white">
+              <div className="user-avatar bg-gradient-to-br from-blue-500 to-purple-600">
+                {user?.name?.charAt(0).toUpperCase() || 'U'}
+              </div>
+              <div className="user-info">
+                <p className="user-name">
                   {user?.name || 'User'}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="user-email">
                   @{user?.username || 'username'}
                 </p>
               </div>
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                {user?.name?.charAt(0).toUpperCase() || 'U'}
-              </div>
-              <svg
-                className={`w-5 h-5 text-gray-500 transition-transform ${
-                  isProfileOpen ? 'rotate-180' : ''
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+              <span className="dropdown-icon">▾</span>
             </button>
 
             {/* Dropdown Menu */}
@@ -71,72 +50,62 @@ export default function Header() {
                 ></div>
                 
                 {/* Dropdown */}
-                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-40">
+                <div className={`dropdown-menu ${isProfileOpen ? 'active' : ''}`}>
                   {/* User Info */}
-                  <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-800">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                        {user?.name?.charAt(0).toUpperCase() || 'U'}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-800 dark:text-white">
-                          {user?.name || 'User'}
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          @{user?.username || 'username'}
-                        </p>
-                      </div>
+                  <div className="dropdown-header">
+                    <div className="dropdown-avatar">
+                      {user?.name?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                    <div className="dropdown-user-info">
+                      <p className="dropdown-user-name">{user?.name || 'User'}</p>
+                      <p className="dropdown-user-email">@{user?.username || 'username'}</p>
                     </div>
                   </div>
 
                   {/* Menu Items */}
-                  <div className="py-2">
+                  <div className="dropdown-body">
                     <button
+                      type="button"
                       onClick={() => {
                         setIsProfileModalOpen(true);
                         setIsProfileOpen(false);
                       }}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 text-gray-700 dark:text-gray-300 transition-colors"
+                      className="dropdown-item"
                     >
-                      <span className="text-xl">👤</span>
-                      <div>
-                        <p className="font-medium">Profil Saya</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500">
-                          Edit profil dan password
-                        </p>
+                      <span className="dropdown-item-icon">👤</span>
+                      <div className="dropdown-item-content">
+                        <span className="dropdown-item-title">Profil Saya</span>
+                        <span className="dropdown-item-subtitle">Edit profil dan password</span>
                       </div>
                     </button>
                     <button
+                      type="button"
                       onClick={() => {
                         setIsProfileOpen(false);
                       }}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 text-gray-700 dark:text-gray-300 transition-colors"
+                      className="dropdown-item"
                     >
-                      <span className="text-xl">⚙️</span>
-                      <div>
-                        <p className="font-medium">Pengaturan</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500">
-                          Tema dan preferensi
-                        </p>
+                      <span className="dropdown-item-icon">⚙️</span>
+                      <div className="dropdown-item-content">
+                        <span className="dropdown-item-title">Pengaturan</span>
+                        <span className="dropdown-item-subtitle">Tema dan preferensi</span>
                       </div>
                     </button>
                   </div>
 
                   {/* Logout */}
-                  <div className="border-t border-gray-200 dark:border-gray-700">
-                    <button
-                      onClick={handleLogout}
-                      className="w-full px-4 py-3 text-left hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 text-red-600 dark:text-red-400 transition-colors"
-                    >
-                      <span className="text-xl">🚪</span>
-                      <div>
-                        <p className="font-medium">Keluar</p>
-                        <p className="text-xs text-red-500 dark:text-red-500">
-                          Logout dari akun
-                        </p>
-                      </div>
-                    </button>
-                  </div>
+                  <div className="dropdown-divider" />
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="dropdown-item logout"
+                  >
+                    <span className="dropdown-item-icon">🚪</span>
+                    <div className="dropdown-item-content">
+                      <span className="dropdown-item-title">Keluar</span>
+                      <span className="dropdown-item-subtitle">Logout dari akun</span>
+                    </div>
+                  </button>
                 </div>
               </>
             )}

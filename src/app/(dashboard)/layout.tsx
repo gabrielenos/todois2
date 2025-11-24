@@ -19,11 +19,13 @@ export default function DashboardLayout({
   return (
     <PreferencesProvider>
       <AuthProvider>
-        <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="container">
           <Sidebar currentView={currentView} />
-          <div className="flex-1 flex flex-col overflow-hidden bg-gray-50 dark:bg-gray-900">
-            <Header />
-            <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+          <div className="main-content">
+            <div className="header">
+              <Header />
+            </div>
+            <main>
               {children}
             </main>
           </div>

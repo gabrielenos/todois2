@@ -1,4 +1,3 @@
-'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { apiLogin, apiMe, apiRegister, apiUpdateProfile } from '@/lib/api';
@@ -146,6 +145,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('token');
     setToken(null);
     setNeedsOnboarding(false);
+    // Redirect to home so components using onClick={logout} navigate away
+    // Use location to avoid dependency on router in context
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
   };
 
   return (

@@ -86,60 +86,60 @@ export default function Notes() {
 
   if (loading) {
     return (
-      <div className="p-8 flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">{t('notes.loading')}</p>
+      <div className="p-8 min-h-screen flex justify-center">
+        <div className="todo-section w-full">
+          <div className="notes-loading">
+            <div className="notes-spinner"></div>
+            <div className="notes-loading-text">{t('notes.loading')}</div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="p-8 min-h-screen flex justify-center">
+      <div className="todo-section w-full notes-container">
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-2">
-            📝 {t('notes.title')}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            {t('notes.subtitle')}
-          </p>
+      <div className="notes-header">
+        <div className="notes-title-section">
+          <div className="todo-title">{t('notes.title')}</div>
+          <div className="todo-subtitle">{t('notes.subtitle')}</div>
         </div>
         <button 
           onClick={() => setShowCreateModal(true)}
-          className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all font-medium"
+          className="btn-add"
         >
-          ➕ {t('notes.addNew')}
+          <span className="btn-icon">➕</span>
+          <span>{t('notes.addNew')}</span>
         </button>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-2xl">
+      <div className="notes-stats">
+        <div className="stat-card">
+          <div className="stat-content">
+            <div className="stat-icon total">
               📄
             </div>
             <div>
-              <p className="text-3xl font-bold text-gray-800 dark:text-white">{notes.length}</p>
-              <p className="text-gray-600 dark:text-gray-400">{t('notes.totalNotes')}</p>
+              <div className="stat-number">{notes.length}</div>
+              <div className="stat-label">{t('notes.totalNotes')}</div>
             </div>
           </div>
         </div>
         {Object.entries(categoryStats).slice(0, 3).map(([category, count], index) => {
-          const icons = ['💡', '💼', '👤', '📚'];
-          const colors = ['yellow', 'blue', 'green', 'purple'];
+          const icons = ['💡', '💼', '👤'];
+          const iconClasses = ['ideas', 'work', 'personal'];
           return (
-            <div key={category} className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-              <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 bg-gradient-to-br from-${colors[index]}-500 to-${colors[index]}-600 rounded-xl flex items-center justify-center text-2xl`}>
+            <div key={category} className="stat-card">
+              <div className="stat-content">
+                <div className={`stat-icon ${iconClasses[index]}`}>
                   {icons[index]}
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-gray-800 dark:text-white">{count}</p>
-                  <p className="text-gray-600 dark:text-gray-400">{category}</p>
+                  <div className="stat-number">{count}</div>
+                  <div className="stat-label">{category}</div>
                 </div>
               </div>
             </div>
@@ -148,39 +148,40 @@ export default function Notes() {
       </div>
 
       {/* Notes Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="notes-grid">
         {notes.map((note) => (
           <div
             key={note.id}
             onClick={() => setSelectedNote(note.id)}
-            className={`bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border-2 hover:shadow-xl transition-all cursor-pointer ${
-              selectedNote === note.id
-                ? 'border-blue-500 scale-105'
-                : 'border-gray-200 dark:border-gray-700'
+            className={`note-card ${note.color} ${
+              selectedNote === note.id ? 'selected' : ''
             }`}
           >
             {/* Note Header */}
-            <div className="flex items-start justify-between mb-4">
-              <div className={`px-3 py-1 bg-gradient-to-r ${getColorClass(note.color)} text-white rounded-full text-sm font-medium`}>
-                {note.category}
+            <div className="note-header">
+              <div className={`note-category ${note.color}`}>
+                {note.category || 'Lainnya'}
               </div>
-              <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+              <button className="note-menu">
                 ⋮
               </button>
             </div>
 
             {/* Note Content */}
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">
+            <h3 className="note-title">
               {note.title}
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
+            <p className="note-content">
               {note.content}
             </p>
 
             {/* Note Footer */}
-            <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-500">
-              <span>📅 {formatDate(note.updated_at)}</span>
-              <button className="text-blue-500 hover:text-blue-600 font-medium">
+            <div className="note-footer">
+              <div className="note-date">
+                <span>📅</span>
+                <span>{formatDate(note.updated_at)}</span>
+              </div>
+              <button className="note-read-btn">
                 Baca →
               </button>
             </div>
@@ -190,101 +191,107 @@ export default function Notes() {
         {/* Add New Note Card */}
         <div 
           onClick={() => setShowCreateModal(true)}
-          className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-500 transition-all cursor-pointer flex items-center justify-center min-h-[250px]"
+          className="add-note-card"
         >
-          <div className="text-center">
-            <div className="text-6xl mb-4">➕</div>
-            <p className="text-gray-600 dark:text-gray-400 font-medium">
-              {t('notes.addNewNote')}
-            </p>
+          <div className="add-note-icon">➕</div>
+          <div className="add-note-text">
+            {t('notes.addNewNote')}
           </div>
         </div>
       </div>
 
       {/* Create Note Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-2xl w-full shadow-2xl">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
-              ➕ {t('notes.addNew')}
-            </h2>
+        <div className="notes-modal">
+          <div className="notes-modal-content">
+            <div className="notes-modal-header">
+              <div className="notes-modal-title">➕ {t('notes.addNew')}</div>
+              <button
+                onClick={() => {
+                  setShowCreateModal(false);
+                  setNewNote({ title: '', content: '', category: '', color: 'yellow' });
+                }}
+                className="modal-close"
+              >
+                ✕
+              </button>
+            </div>
             
-            <div className="space-y-4">
+            <div>
               {/* Title */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div className="notes-form-group">
+                <label className="notes-form-label">
                   {t('notes.noteTitle')} *
                 </label>
                 <input
                   type="text"
                   value={newNote.title}
                   onChange={(e) => setNewNote({ ...newNote, title: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="notes-form-input"
                   placeholder="Masukkan judul catatan..."
                 />
               </div>
 
               {/* Category */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div className="notes-form-group">
+                <label className="notes-form-label">
                   {t('notes.category')}
                 </label>
                 <input
                   type="text"
                   value={newNote.category}
                   onChange={(e) => setNewNote({ ...newNote, category: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="notes-form-input"
                   placeholder="Contoh: Ide, Kerja, Pribadi..."
                 />
               </div>
 
               {/* Color */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div className="notes-form-group">
+                <label className="notes-form-label">
                   {t('notes.color')}
                 </label>
-                <div className="flex gap-3">
+                <div className="notes-color-picker">
                   {['yellow', 'blue', 'green', 'purple', 'pink'].map((color) => (
                     <button
                       key={color}
                       onClick={() => setNewNote({ ...newNote, color })}
-                      className={`w-12 h-12 rounded-full border-4 transition-all ${
-                        newNote.color === color ? 'border-gray-800 dark:border-white scale-110' : 'border-transparent'
-                      } bg-gradient-to-br ${getColorClass(color)}`}
+                      className={`notes-color-option ${color} ${
+                        newNote.color === color ? 'selected' : ''
+                      }`}
                     />
                   ))}
                 </div>
               </div>
 
               {/* Content */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div className="notes-form-group">
+                <label className="notes-form-label">
                   {t('notes.content')}
                 </label>
                 <textarea
                   value={newNote.content}
                   onChange={(e) => setNewNote({ ...newNote, content: e.target.value })}
-                  rows={6}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white resize-none"
+                  className="notes-form-textarea"
                   placeholder="Tulis catatan Anda di sini..."
                 />
               </div>
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-3 mt-6">
+            <div className="notes-modal-actions">
               <button
                 onClick={() => {
                   setShowCreateModal(false);
                   setNewNote({ title: '', content: '', category: '', color: 'yellow' });
                 }}
-                className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all font-medium"
+                className="notes-btn-cancel"
               >
                 {t('notes.cancel')}
               </button>
               <button
                 onClick={handleCreateNote}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all font-medium"
+                className="notes-btn-save"
               >
                 {t('notes.save')}
               </button>
@@ -292,6 +299,7 @@ export default function Notes() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

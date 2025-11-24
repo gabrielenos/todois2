@@ -15,7 +15,7 @@ const config: Config = {
       },
       animation: {
         blob: "blob 7s infinite",
-        fadeIn: "fadeIn 0.3s ease-in",
+        fadeIn: "fadeIn 0.3s ease-out",
       },
       keyframes: {
         blob: {

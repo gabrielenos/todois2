@@ -21,7 +21,7 @@ export default function Sidebar({ currentView }: SidebarProps) {
   ];
 
   return (
-    <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col h-screen">
+    <div className="sidebar flex flex-col">
       {/* Header */}
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -33,18 +33,18 @@ export default function Sidebar({ currentView }: SidebarProps) {
       </div>
 
       {/* Menu Items */}
-      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+      <nav className="menu flex-1 p-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => (
           <Link
             key={item.id}
             href={item.href}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+            className={`menu-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
               currentView === item.id
-                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105'
+                ? 'active bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105'
                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
-            <span className="text-2xl">{item.icon}</span>
+            <span className="menu-icon text-2xl">{item.icon}</span>
             <span className="font-medium">{item.label}</span>
           </Link>
         ))}

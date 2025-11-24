@@ -102,40 +102,33 @@ export default function Calendar() {
   };
 
   return (
-    <div className="p-8 min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="p-8 min-h-screen flex justify-center">
+      <div className="todo-section w-full">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-2">
-          📅 {t('calendar.title')}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          {t('calendar.subtitle')}
-        </p>
+      <div className="todo-header mb-4">
+        <div>
+          <div className="todo-title">{t('calendar.title')}</div>
+          <div className="todo-subtitle">{t('calendar.subtitle')}</div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="calendar-container">
         {/* Calendar */}
-        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="calendar-section">
           {/* Calendar Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-              {getMonthName(currentDate.getMonth())} {currentDate.getFullYear()}
-            </h2>
-            <div className="flex gap-2">
-              <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-                ←
-              </button>
-              <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all">
-                {t('calendar.today')}
-              </button>
-              <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-                →
-              </button>
+          <div className="calendar-header">
+            <div className="calendar-title">
+              📅 {getMonthName(currentDate.getMonth())} {currentDate.getFullYear()}
+            </div>
+            <div className="calendar-nav">
+              <button className="nav-btn">←</button>
+              <button className="today-btn">{t('calendar.today')}</button>
+              <button className="nav-btn">→</button>
             </div>
           </div>
 
           {/* Day Names */}
-          <div className="grid grid-cols-7 gap-2 mb-2">
+          <div className="calendar-grid mb-2">
             {[0, 1, 2, 3, 4, 5, 6].map((dayIndex) => (
               <div
                 key={dayIndex}
@@ -147,16 +140,16 @@ export default function Calendar() {
           </div>
 
           {/* Calendar Days */}
-          <div className="grid grid-cols-7 gap-2">
+          <div className="calendar-grid">
             {days.map((day, index) => (
               <div
                 key={index}
-                className={`aspect-square flex items-center justify-center rounded-lg transition-all ${
+                className={`calendar-day ${
                   day
                     ? day === currentDate.getDate()
-                      ? 'bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold shadow-lg'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-gray-800 dark:text-white'
-                    : ''
+                      ? 'calendar-day--today'
+                      : 'calendar-day--normal text-gray-800 dark:text-white'
+                    : 'calendar-day--inactive'
                 }`}
               >
                 {day}
@@ -166,172 +159,138 @@ export default function Calendar() {
         </div>
 
         {/* Upcoming Events */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6">
-            {t('calendar.upcomingEvents')}
-          </h2>
+        <div className="events-section">
+          <div className="section-header mb-4">
+            <span className="section-icon">🕰️</span>
+            <span className="section-title">{t('calendar.upcomingEvents')}</span>
+          </div>
+          
           {events.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📅</div>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                {t('calendar.noEvents')}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">
-                {t('calendar.clickToAdd')}
-              </p>
+            <div className="empty-state text-center py-8">
+              <div className="empty-icon text-4xl mb-3">📅</div>
+              <div className="empty-title">{t('calendar.noEvents')}</div>
+              <div className="empty-subtitle">{t('calendar.clickToAdd')}</div>
             </div>
           ) : (
-            <div className="space-y-4">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="p-4 rounded-xl border-l-4 bg-gray-50 dark:bg-gray-700 hover:shadow-md transition-shadow"
-                  style={{
-                    borderLeftColor:
-                      event.color === 'blue'
-                        ? '#3b82f6'
-                        : event.color === 'purple'
-                        ? '#9333ea'
-                        : event.color === 'green'
-                        ? '#22c55e'
-                        : event.color === 'red'
-                        ? '#ef4444'
-                        : '#eab308',
-                  }}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-800 dark:text-white mb-1">
-                        {event.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        📅 {event.date}
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        🕐 {event.time}
-                      </p>
-                      {event.description && (
-                        <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-                          {event.description}
-                        </p>
-                      )}
+            events.map((event) => (
+              <div key={event.id} className={`event-card ${event.color}`}>
+                <div className="event-header">
+                  <div>
+                    <div className="event-title">{event.title}</div>
+                    <div className="event-time">
+                      <span>📅 {event.date}</span>
+                      <span>🕐 {event.time}</span>
                     </div>
-                    <button
-                      onClick={() => handleDeleteEvent(event.id)}
-                      className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-                    >
-                      🗑️
-                    </button>
                   </div>
+                  <button
+                    onClick={() => handleDeleteEvent(event.id)}
+                    className="event-delete"
+                  >
+                    🗑️
+                  </button>
                 </div>
-              ))}
-            </div>
+                {event.description && (
+                  <div className="event-description">{event.description}</div>
+                )}
+              </div>
+            ))
           )}
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all font-medium"
+            className="btn-add w-full mt-4"
           >
-            ➕ {t('calendar.addEvent')}
+            <span className="btn-icon">➕</span>
+            <span>{t('calendar.addEvent')}</span>
           </button>
         </div>
       </div>
 
       {/* Add Event Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                ➕ {t('calendar.addEvent')}
-              </h2>
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <div className="modal-title">➕ {t('calendar.addEvent')}</div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                className="modal-close"
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('calendar.eventTitle')} *
-                </label>
+            <div className="space-y-3">
+              <div className="form-group">
+                <label className="form-label">{t('calendar.eventTitle')} *</label>
                 <input
                   type="text"
                   value={newEvent.title}
                   onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
                   placeholder={t('calendar.eventTitle')}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="form-input"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('calendar.date')} *
-                </label>
-                <input
-                  type="date"
-                  value={newEvent.date}
-                  onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                />
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">{t('calendar.date')} *</label>
+                  <input
+                    type="date"
+                    value={newEvent.date}
+                    onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+                    className="form-input"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">{t('calendar.time')} *</label>
+                  <input
+                    type="time"
+                    value={newEvent.time}
+                    onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
+                    className="form-input"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('calendar.time')} *
-                </label>
-                <input
-                  type="time"
-                  value={newEvent.time}
-                  onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('calendar.color')}
-                </label>
-                <div className="flex gap-2">
+              <div className="form-group">
+                <label className="form-label">{t('calendar.color')}</label>
+                <div className="color-picker">
                   {['blue', 'purple', 'green', 'red', 'yellow'].map((color) => (
                     <button
                       key={color}
                       onClick={() => setNewEvent({ ...newEvent, color })}
-                      className={`w-10 h-10 rounded-lg bg-gradient-to-br ${getColorClass(color)} ${
-                        newEvent.color === color ? 'ring-4 ring-offset-2 ring-blue-500' : ''
+                      className={`color-option ${color} ${
+                        newEvent.color === color ? 'selected' : ''
                       }`}
                     />
                   ))}
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('todo.description')}
-                </label>
+              <div className="form-group">
+                <label className="form-label">{t('todo.description')}</label>
                 <textarea
                   value={newEvent.description}
                   onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
                   placeholder={`${t('todo.description')}...`}
+                  className="form-textarea"
                   rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="modal-actions">
               <button
                 onClick={() => setShowAddModal(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="btn-cancel"
               >
                 {t('calendar.cancel')}
               </button>
               <button
                 onClick={handleAddEvent}
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all"
+                className="btn-save"
               >
                 {t('calendar.save')}
               </button>
@@ -339,6 +298,7 @@ export default function Calendar() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -279,41 +279,34 @@ export default function TodoList() {
         </div>
       )}
       {/* Sidebar */}
-      <div className={`${isSidebarOpen ? 'w-72' : 'w-0'} transition-all duration-300 bg-gradient-to-b from-gray-50 to-gray-100/50 dark:from-gray-900 dark:to-gray-900/50 backdrop-blur-sm border-r border-gray-200/50 dark:border-gray-700/50 overflow-hidden`}>
-        <div className="p-6">
+      <div className={`${isSidebarOpen ? 'w-72' : 'w-0'} todo-sidebar overflow-hidden`}>
+        <div className="todo-sidebar-content">
           {/* Search Bar */}
           <div className="mb-6">
-            <div className="relative group">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`🔍 ${t('todo.searchPlaceholder')}`}
-                className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-800 dark:text-white text-sm transition-all shadow-sm hover:shadow-md"
-              />
-              <svg className="w-5 h-5 absolute left-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t('todo.searchPlaceholder')}
+              className="search-input"
+            />
           </div>
 
           {/* Navigation Menu */}
-          <nav className="space-y-1 mb-6">
-            <div className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
-              <span className="flex-1 text-left font-medium">{t('todo.tasks')}</span>
-              <span className="text-sm">{activeCount}</span>
+          <nav className="nav-menu">
+            <div className="nav-item">
+              <span className="nav-item-text">{t('todo.tasks')}</span>
+              <span className="nav-item-count">{activeCount}</span>
             </div>
           </nav>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 md:p-8">
+      <div className="flex-1 p-6 md:p-8 flex justify-center">
+        <div className="todo-section w-full">
         {/* Header with Toggle */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -323,20 +316,33 @@ export default function TodoList() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                ✅ {t('todo.myTasks')}
-              </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                {t('todo.allTasks')}
-              </p>
+            <div className="todo-header">
+              <div>
+                <div className="todo-title">{t('todo.myTasks')}</div>
+                <div className="todo-subtitle">{t('todo.allTasks')}</div>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Stats bar */}
+        <div className="stats-bar">
+          <div className="stat-item all">
+            <span>📋</span>
+            <span>{t('todo.filterAll')} ({todos.length})</span>
+          </div>
+          <div className="stat-item active">
+            <span>🔥</span>
+            <span>{t('todo.filterActive')} ({activeCount})</span>
+          </div>
+          <div className="stat-item completed">
+            <span>✅</span>
+            <span>{t('todo.filterCompleted')} ({completedCount})</span>
+          </div>
+        </div>
+
         {/* Input Section */}
-        <div className="mb-8">
-          <div className="bg-white dark:bg-gray-800/50 rounded-2xl p-5 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
+        <div className="add-task-form">
             <div className="space-y-3">
               <input
                 type="text"
@@ -344,107 +350,101 @@ export default function TodoList() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && addTodo()}
                 placeholder={`✨ ${t('todo.addTask')}...`}
-                className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:bg-gray-700 dark:text-white transition-all text-base"
+                className="form-input"
               />
               
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                <input
-                  type="date"
-                  value={selectedDueDate}
-                  onChange={(e) => setSelectedDueDate(e.target.value)}
-                  className="px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:bg-gray-700 dark:text-white transition-all text-sm"
-                />
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">{t('todo.dueDate')}</label>
+                  <input
+                    type="date"
+                    value={selectedDueDate}
+                    onChange={(e) => setSelectedDueDate(e.target.value)}
+                    className="form-input"
+                  />
+                </div>
                 
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:bg-gray-700 dark:text-white transition-all text-sm"
-                >
-                  <option value="">{t('todo.category')}</option>
-                  {CATEGORIES.map(cat => (
-                    <option key={cat} value={cat}>{getCategoryLabel(cat)}</option>
-                  ))}
-                </select>
+                <div className="form-group">
+                  <label className="form-label">{t('todo.category')}</label>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="form-select"
+                  >
+                    <option value="">{t('todo.category')}</option>
+                    {CATEGORIES.map(cat => (
+                      <option key={cat} value={cat}>{getCategoryLabel(cat)}</option>
+                    ))}
+                  </select>
+                </div>
                 
-                <select
-                  value={selectedPriority}
-                  onChange={(e) => setSelectedPriority(e.target.value as 'high' | 'medium' | 'low')}
-                  className="px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:bg-gray-700 dark:text-white transition-all text-sm"
-                >
-                  {PRIORITIES.map(p => (
-                    <option key={p.value} value={p.value}>{t(p.labelKey)}</option>
-                  ))}
-                </select>
+                <div className="form-group">
+                  <label className="form-label">{t('todo.priority')}</label>
+                  <select
+                    value={selectedPriority}
+                    onChange={(e) => setSelectedPriority(e.target.value as 'high' | 'medium' | 'low')}
+                    className="form-select"
+                  >
+                    {PRIORITIES.map(p => (
+                      <option key={p.value} value={p.value}>{t(p.labelKey)}</option>
+                    ))}
+                  </select>
+                </div>
                 
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    console.log('Button clicked!');
-                    addTodo();
-                  }}
-                  className="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 active:scale-95 cursor-pointer relative z-10"
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    {t('todo.addTask')}
-                  </span>
-                </button>
+                <div className="form-group">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      console.log('Button clicked!');
+                      addTodo();
+                    }}
+                    className="btn-add"
+                  >
+                    <span className="btn-icon">➕</span>
+                    <span>{t('todo.addTask')}</span>
+                  </button>
+                </div>
               </div>
               
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder={`📝 ${t('todo.description')}...`}
-                className="w-full px-5 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:bg-gray-700 dark:text-white transition-all text-sm resize-none"
+                className="form-textarea"
                 rows={2}
               />
             </div>
-          </div>
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex flex-wrap gap-3 mb-4">
+        <div className="filter-tabs">
           <button
             onClick={() => setFilter('all')}
-            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-              filter === 'all'
-                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:shadow-md border-2 border-gray-200 dark:border-gray-700'
-            }`}
+            className={`filter-tab ${filter === 'all' ? 'active' : ''}`}
           >
-            {t('todo.filterAll')} <span className="ml-1 text-sm opacity-75">({todos.length})</span>
+            {t('todo.filterAll')} ({todos.length})
           </button>
           <button
             onClick={() => setFilter('active')}
-            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-              filter === 'active'
-                ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30 scale-105'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:shadow-md border-2 border-gray-200 dark:border-gray-700'
-            }`}
+            className={`filter-tab ${filter === 'active' ? 'active' : ''}`}
           >
-            {t('todo.filterActive')} <span className="ml-1 text-sm opacity-75">({activeCount})</span>
+            {t('todo.filterActive')} ({activeCount})
           </button>
           <button
             onClick={() => setFilter('completed')}
-            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-              filter === 'completed'
-                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/30 scale-105'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:shadow-md border-2 border-gray-200 dark:border-gray-700'
-            }`}
+            className={`filter-tab ${filter === 'completed' ? 'active' : ''}`}
           >
-            {t('todo.filterCompleted')} <span className="ml-1 text-sm opacity-75">({completedCount})</span>
+            {t('todo.filterCompleted')} ({completedCount})
           </button>
         </div>
 
         {/* Advanced Filters and Sort */}
-        <div className="flex flex-wrap gap-3 mb-6">
+        <div className="filter-bar">
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:text-white text-sm"
+            className="filter-select"
           >
             <option value="all">{t('todo.allCategories')}</option>
             {CATEGORIES.map(cat => (
@@ -455,7 +455,7 @@ export default function TodoList() {
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="px-4 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:text-white text-sm"
+            className="filter-select"
           >
             <option value="all">{t('todo.allPriorities')}</option>
             {PRIORITIES.map(p => (
@@ -466,7 +466,7 @@ export default function TodoList() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'date' | 'priority' | 'deadline')}
-            className="px-4 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:text-white text-sm"
+            className="filter-select"
           >
             <option value="date">{t('todo.sortNewest')}</option>
             <option value="priority">{t('todo.sortPriority')}</option>
@@ -475,7 +475,7 @@ export default function TodoList() {
         </div>
 
         {/* Todo List */}
-        <div className="space-y-4 mb-6">
+        <div className="task-list mb-6">
           {filteredTodos.length === 0 ? (
             <div className="text-center py-20 px-6">
               <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 rounded-full flex items-center justify-center">
@@ -503,134 +503,138 @@ export default function TodoList() {
               </p>
             </div>
           ) : (
-            filteredTodos.map((todo) => (
-              <div
-                key={todo.id}
-                className={`group flex items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-200 ${
-                  todo.completed
-                    ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800 shadow-sm'
-                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-lg hover:scale-[1.02]'
-                }`}
-              >
-                {/* Checkbox */}
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => toggleTodo(todo.id)}
-                  className="w-6 h-6 rounded-lg cursor-pointer accent-blue-500 transition-transform hover:scale-110"
-                />
+            filteredTodos.map((todo, index) => {
+              const categoryClass = 'task-badge badge-category';
 
-                {/* Todo Text or Edit Input */}
-                {editingId === todo.id ? (
-                  <input
-                    type="text"
-                    value={editingText}
-                    onChange={(e) => setEditingText(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && saveEdit(todo.id)}
-                    className="flex-1 px-4 py-3 border-2 border-blue-500 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 dark:bg-gray-700 dark:text-white font-medium"
-                    autoFocus
-                  />
-                ) : (
-                  <div className="flex-1">
-                    <span
-                      className={`block text-base font-medium ${
-                        todo.completed
-                          ? 'line-through text-gray-500 dark:text-gray-400'
-                          : 'text-gray-800 dark:text-white'
-                      }`}
-                    >
-                      {todo.text}
-                    </span>
-                    {todo.description && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                        {todo.description}
-                      </p>
+              const priorityClass =
+                todo.priority === 'high'
+                  ? 'task-badge badge-priority tinggi'
+                  : todo.priority === 'medium'
+                  ? 'task-badge badge-priority sedang'
+                  : 'task-badge badge-priority rendah';
+
+              return (
+                <div
+                  key={todo.id}
+                  className="task-item group"
+                >
+                  {/* Main content: checkbox, text, description, due date */}
+                  <div className="task-content">
+                    {editingId === todo.id ? (
+                      <input
+                        type="text"
+                        value={editingText}
+                        onChange={(e) => setEditingText(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && saveEdit(todo.id)}
+                        className="w-full px-4 py-3 border-2 border-blue-500 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 dark:bg-gray-700 dark:text-white font-medium"
+                        autoFocus
+                      />
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            checked={todo.completed}
+                            onChange={() => toggleTodo(todo.id)}
+                            className={`task-checkbox ${todo.completed ? 'checked' : ''}`}
+                          />
+                          <span
+                            className={`text-base font-medium ${
+                              todo.completed
+                                ? 'line-through text-gray-500 dark:text-gray-400'
+                                : 'text-gray-800 dark:text-white'
+                            }`}
+                          >
+                            {todo.text}
+                          </span>
+                        </div>
+                        {todo.description && (
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            {todo.description}
+                          </p>
+                        )}
+                        {todo.dueDate && (
+                          <div className="task-date mt-1">
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {new Date(todo.dueDate).toLocaleDateString('id-ID', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                            })}
+                          </div>
+                        )}
+                      </>
                     )}
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {todo.dueDate && (
-                        <span className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg ${
-                          todo.completed
-                            ? 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                            : 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                        }`}>
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          {new Date(todo.dueDate).toLocaleDateString('id-ID', { 
-                          day: 'numeric', 
-                          month: 'short', 
-                          year: 'numeric' 
-                        })}
-                        </span>
-                      )}
-                      {todo.category && (
-                        <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800">
-                          🏷️ {todo.category}
-                        </span>
-                      )}
-                      <span className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg border ${getPriorityColor(todo.priority)}`}>
-                        {todo.priority === 'high' && '🔴'}
-                        {todo.priority === 'medium' && '🟡'}
-                        {todo.priority === 'low' && '🟢'}
-                        {getPriorityLabel(todo.priority)}
-                      </span>
+                  </div>
+
+                  {/* Category & Priority */}
+                  <div className="task-meta">
+                    {todo.category && (
+                      <div className={categoryClass}>{todo.category}</div>
+                    )}
+                    <div className={priorityClass}>
+                      {todo.priority === 'high'
+                        ? t('todo.priorityHigh')
+                        : todo.priority === 'medium'
+                        ? t('todo.priorityMedium')
+                        : t('todo.priorityLow')}
                     </div>
                   </div>
-                )}
 
-                {/* Action Buttons */}
-                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  {editingId === todo.id ? (
-                    <>
-                      <button
-                        onClick={() => saveEdit(todo.id)}
-                        className="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-sm font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:scale-105"
-                      >
-                        ✔️ {t('todo.save')}
-                      </button>
-                      <button
-                        onClick={cancelEdit}
-                        className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:scale-105"
-                      >
-                        ❌ {t('todo.cancel')}
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => startEditing(todo.id, todo.text)}
-                        className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-sm font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                        disabled={todo.completed}
-                      >
-                        ✏️ {t('todo.edit')}
-                      </button>
-                      <button
-                        onClick={() => deleteTodo(todo.id)}
-                        className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:scale-105"
-                      >
-                        🗑️ {t('todo.delete')}
-                      </button>
-                    </>
-                  )}
+                  {/* Action Buttons */}
+                  <div className="task-actions opacity-0 group-hover:opacity-100 transition-opacity">
+                    {editingId === todo.id ? (
+                      <>
+                        <button
+                          onClick={() => saveEdit(todo.id)}
+                          className="px-3 py-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-xs font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:scale-105"
+                        >
+                          ✔️ {t('todo.save')}
+                        </button>
+                        <button
+                          onClick={cancelEdit}
+                          className="px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white text-xs font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:scale-105"
+                        >
+                          ❌ {t('todo.cancel')}
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => startEditing(todo.id, todo.text)}
+                          className="px-3 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                          disabled={todo.completed}
+                        >
+                          ✏️ {t('todo.edit')}
+                        </button>
+                        <button
+                          onClick={() => deleteTodo(todo.id)}
+                          className="px-3 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-xs font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:scale-105"
+                        >
+                          🗑️ {t('todo.delete')}
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 
         {/* Footer Actions */}
         {todos.length > 0 && (
-          <div className="flex justify-between items-center pt-6 mt-6 border-t-2 border-gray-200/50 dark:border-gray-700/50">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                {activeCount} {t('todo.activeTasks')}
-              </p>
+          <div className="footer-actions">
+            <div className="active-count">
+              <div className="active-indicator"></div>
+              <span>{activeCount} {t('todo.activeTasks')}</span>
             </div>
             {completedCount > 0 && (
               <button
                 onClick={clearCompleted}
-                className="px-5 py-2.5 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-semibold rounded-xl transition-all shadow-md hover:shadow-lg hover:scale-105 flex items-center gap-2"
+                className="clear-completed"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -640,6 +644,7 @@ export default function TodoList() {
             )}
           </div>
         )}
+        </div>
       </div>
     </div>
   );
